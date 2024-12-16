@@ -1,5 +1,5 @@
 CREATE TABLE "user" (
-  "id" integer PRIMARY KEY,
+  "id" UUID PRIMARY KEY,
   "name" varchar,
   "document" varchar UNIQUE,
   "email" varchar UNIQUE,

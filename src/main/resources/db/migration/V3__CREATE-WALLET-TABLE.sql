@@ -1,6 +1,6 @@
 CREATE TABLE "wallet" (
-  "id" uuid PRIMARY KEY,
-  "user_id" integer UNIQUE,
+  "id" UUID PRIMARY KEY,
+  "user_id" UUID UNIQUE,
   "type" "WALLET_TYPE",
   "created_at" timestamp,
   "updated_at" timestamp

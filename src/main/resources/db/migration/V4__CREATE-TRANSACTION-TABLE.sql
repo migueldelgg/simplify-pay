@@ -1,7 +1,7 @@
 CREATE TABLE "transaction" (
-  "id" uuid PRIMARY KEY,
-  "payer_wallet_id" uuid,
-  "payee_wallet_id" uuid,
+  "id" UUID PRIMARY KEY,
+  "payer_wallet_id" UUID,
+  "payee_wallet_id" UUID,
   "amount" decimal,
   "processed_at" timestamp
 );
