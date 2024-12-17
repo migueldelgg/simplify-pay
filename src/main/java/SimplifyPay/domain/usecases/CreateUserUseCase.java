@@ -6,6 +6,6 @@ import SimplifyPay.application.dtos.CreateUserData;
 
 public interface CreateUserUseCase {
     
-    public Map<String, Object> execute(CreateUserData data);
+    public Map<String, Object> execute(CreateUserData request);
 
 }

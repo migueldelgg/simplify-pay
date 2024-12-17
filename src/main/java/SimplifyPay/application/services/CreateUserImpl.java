@@ -1,5 +1,6 @@
 package SimplifyPay.application.services;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,20 +28,20 @@ public class CreateUserImpl implements CreateUserUseCase{
 
     @Override
     @Transactional
-    public Map<String, Object> execute(CreateUserData data) {
+    public Map<String, Object> execute(CreateUserData request) {
 
         var user = UserEntity.builder()
-            .id(UUID.randomUUID())
-            .name(data.name())
-            .document(data.document())
-            .email(data.email())
-            .password(data.password())
+            .name(request.name())
+            .document(request.document())
+            .email(request.email())
+            .password(request.password())
             .build();
         
         var wallet = WalletEntity.builder()
             .id(UUID.randomUUID())
             .user(user)
-            .type(WalletType.valueOf(data.walletType()))
+            .type(WalletType.valueOf(request.walletType()))
+            .balance(BigDecimal.valueOf(0.00))
             .build();
         
         user.setWallet(wallet);        

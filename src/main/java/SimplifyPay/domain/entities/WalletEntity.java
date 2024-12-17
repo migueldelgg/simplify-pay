@@ -1,5 +1,6 @@
 package SimplifyPay.domain.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -42,6 +43,8 @@ public class WalletEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WalletType type;
+    
+    private BigDecimal balance;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonProperty(value = "created_at")
