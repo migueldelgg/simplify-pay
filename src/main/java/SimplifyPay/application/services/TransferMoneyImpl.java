@@ -19,17 +19,21 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
 
     private final WalletRepository walletRepo;
     private final TransactionRepository transactionRepo;
-    private final AuthorizationClient client;
-
-    
+    private final AuthorizationClient authClient;
+  
     @Override
     @Transactional
     public void execute(TransferMoneyRequest req) {
+        authClient.execute();
+        Validations.isPayerEqualToReceiver(req.payerId(), req.payeeId()); 
+
         var payerWallet = walletRepo.findByUserId(req.payerId());
-        System.out.println("TIPO DE CARTEIRA: "+payerWallet.getType());
-        Validations.isWalletTypeCommon(payerWallet.getType().toString());
-        //Validations.isSufficientBalance(payeeWallet, req.value());
-        client.execute();
+        var payeeWallet = walletRepo.findByUserId(req.payeeId());
+
+        Validations.userExist(payerWallet, payeeWallet);
+        Validations.isWalletTypeCommon(payerWallet);
+
+        System.out.println("TIPO DE CARTEIRA: "+payerWallet.get().getType());
+        Validations.isSufficientBalance(payerWallet, req.value());
     }
-    
 }
