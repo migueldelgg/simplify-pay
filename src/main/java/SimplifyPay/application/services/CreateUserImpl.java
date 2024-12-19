@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import SimplifyPay.adapters.clients.AuthorizationClient;
 import SimplifyPay.adapters.repositories.UserRepository;
 import SimplifyPay.adapters.repositories.WalletRepository;
 import SimplifyPay.application.dtos.CreateUserData;
@@ -26,7 +25,6 @@ public class CreateUserImpl implements CreateUserUseCase{
 
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
-    private final AuthorizationClient client;
 
     @Override
     @Transactional

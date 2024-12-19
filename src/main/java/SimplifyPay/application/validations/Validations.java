@@ -4,17 +4,27 @@ import java.math.BigDecimal;
 
 import SimplifyPay.domain.entities.WalletEntity;
 import SimplifyPay.domain.entities.WalletType;
+import SimplifyPay.exception.customExceptions.InsufficientBalanceException;
+import SimplifyPay.exception.customExceptions.MerchantCannotTransferException;
 
 public class Validations {
     
-    public static Boolean isWalletTypeCommon(String walletType) {
-        return walletType.equals(WalletType.COMMON.name());
+    public static void isWalletTypeCommon(String walletType) {
+        if(!walletType.equals(WalletType.COMMON.toString())) {
+            throw new MerchantCannotTransferException(
+                "Comerciantes não estão autorizados fazer transferência."
+            );
+        }
     }
 
-    public static Boolean isSufficientBalance(WalletEntity payeeWallet, BigDecimal value) {
+    public static void isSufficientBalance(WalletEntity payeeWallet, BigDecimal transferValue) {
         var balance = payeeWallet.getBalance();
-        var zero = new BigDecimal(0.00);
-        return !(balance.compareTo(zero) <= 0 || balance.compareTo(value) < 0);
+        String message = String.format(
+    "Saldo insuficiente para realizar a transação. Saldo: %s, Deseja transferir: %s", 
+            payeeWallet.getBalance(), transferValue);
+        if (balance.compareTo( BigDecimal.ZERO ) <= 0 || balance.compareTo( transferValue ) < 0) {
+            throw new InsufficientBalanceException( message );
+        }    
     }
 
 }

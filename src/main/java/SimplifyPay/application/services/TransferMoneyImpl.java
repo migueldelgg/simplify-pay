@@ -3,6 +3,7 @@ package SimplifyPay.application.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import SimplifyPay.adapters.clients.AuthorizationClient;
 import SimplifyPay.adapters.repositories.TransactionRepository;
 import SimplifyPay.adapters.repositories.WalletRepository;
 import SimplifyPay.application.dtos.TransferMoneyRequest;
@@ -18,18 +19,17 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
 
     private final WalletRepository walletRepo;
     private final TransactionRepository transactionRepo;
+    private final AuthorizationClient client;
+
     
     @Override
     @Transactional
     public void execute(TransferMoneyRequest req) {
-        var payeeWallet = walletRepo.findByUserId(req.payeeId());
-        Boolean condition;
-        
-        condition = Validations.isWalletTypeCommon(payeeWallet.getType().toString());
-        condition = Validations.isSufficientBalance(payeeWallet, payeeWallet.getBalance());
-        if(condition == false) {
-            System.out.println("EXCEPTION LANCADA!");
-        }
+        var payerWallet = walletRepo.findByUserId(req.payerId());
+        System.out.println("TIPO DE CARTEIRA: "+payerWallet.getType());
+        Validations.isWalletTypeCommon(payerWallet.getType().toString());
+        //Validations.isSufficientBalance(payeeWallet, req.value());
+        client.execute();
     }
     
 }
