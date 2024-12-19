@@ -1,0 +1,2 @@
+ALTER TABLE transaction DROP CONSTRAINT transaction_payer_wallet_id_key;
+ALTER TABLE transaction DROP CONSTRAINT transaction_payee_wallet_id_key;

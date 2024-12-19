@@ -25,14 +25,14 @@ public class Controller {
     private final CreateUserImpl createUserImpl;
     private final TransferMoneyImpl transferMoney;
     
-    @PostMapping("user/")
+    @PostMapping("user")
     public ResponseEntity<Map<String, Object>> createUserAndWallet(@RequestBody @Valid CreateUserData input) {
         var response = createUserImpl.execute(input);
     
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("transfer-money/")
+    @PostMapping("transfer")
     public ResponseEntity<String> transferMoneyMethod(@RequestBody TransferMoneyRequest req) {
         System.out.println("VALOR A SER TRANSFERIDO CONTROLLER: "+ req.value());
 
