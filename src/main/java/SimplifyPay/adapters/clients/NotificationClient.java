@@ -15,5 +15,5 @@ public interface NotificationClient {
     
     @PostMapping("/notify")
     @Async
-    CompletableFuture<ResponseEntity<Void>>  execute();
+    CompletableFuture<ResponseEntity<Void>> execute();
 }

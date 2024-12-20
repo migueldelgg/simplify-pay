@@ -34,9 +34,9 @@ public class Controller {
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<Map<String, Object>> transferMoneyMethod(@RequestBody TransferMoneyRequest req) {
-        var response = transferMoney.execute(req);
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<Void> transferMoneyMethod(@RequestBody TransferMoneyRequest req) {
+        transferMoney.execute(req);
+        return ResponseEntity.noContent().build();
     }
     
 }
