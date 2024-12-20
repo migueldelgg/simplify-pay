@@ -9,7 +9,6 @@ import SimplifyPay.adapters.clients.response.Authorize;
     value = "authorization-dev-tools", 
     url="https://util.devi.tools/api/v2"
 )
-
 public interface AuthorizationClient {
     
     @GetMapping("/authorize")

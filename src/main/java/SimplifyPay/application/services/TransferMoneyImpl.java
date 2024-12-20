@@ -2,6 +2,8 @@ package SimplifyPay.application.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import SimplifyPay.domain.usecases.TransferMoneyUseCase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor(onConstructor= @__(@Autowired))
 public class TransferMoneyImpl implements TransferMoneyUseCase {
@@ -28,10 +29,11 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
     private final WalletRepository walletRepo;
     private final TransactionRepository transactionRepo;
     private final AuthorizationClient authClient;
+    private final NotificationService notifyService;
   
     @Override
     @Transactional
-    public void execute(TransferMoneyRequest req) {
+    public Map<String, Object> execute(TransferMoneyRequest req) {
         logger.info(req.toString());
         Validations.isPayerEqualToReceiver(req.payerId(), req.payeeId()); 
         logger.info("Request validated.");
@@ -60,6 +62,12 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
 
         createTransaction(payerWallet.get(), payeeWallet.get(), req.value());
         logger.info("Transaction Created");
+        notifyService.sendNotification();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("payer", payerWallet.get());
+        response.put("payee", payeeWallet.get());
+        return response;
     }
 
     public void createTransaction(
@@ -82,5 +90,5 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
 
             walletRepo.save(payeeWallet);
             walletRepo.save(payerWallet);
-        }
+    }
 }

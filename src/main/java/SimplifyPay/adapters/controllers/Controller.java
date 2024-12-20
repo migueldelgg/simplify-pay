@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,29 +19,24 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
-@RequestMapping("/v1/")
+@RequestMapping("/v1")
+@EnableAsync
 @RequiredArgsConstructor(onConstructor= @__(@Autowired))
 public class Controller {
 
     private final CreateUserImpl createUserImpl;
     private final TransferMoneyImpl transferMoney;
     
-    @PostMapping("user")
+    @PostMapping("/user")
     public ResponseEntity<Map<String, Object>> createUserAndWallet(@RequestBody @Valid CreateUserData input) {
         var response = createUserImpl.execute(input);
-    
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("transfer")
-    public ResponseEntity<String> transferMoneyMethod(@RequestBody TransferMoneyRequest req) {
-        System.out.println("VALOR A SER TRANSFERIDO CONTROLLER: "+ req.value());
-
-        transferMoney.execute(req);
-        
-        var resposta = "deu bom!";
-
-        return ResponseEntity.ok().body(resposta);
+    @PostMapping("/transfer")
+    public ResponseEntity<Map<String, Object>> transferMoneyMethod(@RequestBody TransferMoneyRequest req) {
+        var response = transferMoney.execute(req);
+        return ResponseEntity.ok().body(response);
     }
     
 }

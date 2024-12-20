@@ -87,4 +87,16 @@ public class RestExceptionHandler {
                 .build();
             return ResponseEntity.status(code).body(response);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<RestErrorMessage> handlePayeeNotFound(
+        FeignException.GatewayTimeout ex
+        ) {
+            var code = HttpStatus.SERVICE_UNAVAILABLE;
+            var response = RestErrorMessage.builder()
+                .statusCode(code.getReasonPhrase())
+                .message(ex.getMessage())
+                .build();
+            return ResponseEntity.status(code).body(response);
+    }
 }
