@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import SimplifyPay.adapters.clients.NotificationClient;
@@ -24,17 +25,19 @@ public class NotificationService {
         backoff = @Backoff(delay = 3000),
         recover= "recoverNotification"
     )
+    @Async
     public void sendNotification() { 
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+        }
         client.execute();
         logger.info("Notification send");
     }
 
     @Recover
-    public void recoverNotification(
-        FeignException.GatewayTimeout e,
-         NotificationClient notifyClient
-    ) {
-        logger.error(e.getMessage());
-        logger.info("Calling another notification provider");
+    public void recoverNotification(FeignException.GatewayTimeout e) {
+        logger.error("Recovering from FeignException.GatewayTimeout: {}", e.getMessage());
+        logger.info("Calling another notification provider...");
     }
 }

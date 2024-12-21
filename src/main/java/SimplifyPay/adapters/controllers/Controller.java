@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/v1")
 @EnableAsync
+@EnableRetry
 @RequiredArgsConstructor(onConstructor= @__(@Autowired))
 public class Controller {
 
@@ -34,7 +36,7 @@ public class Controller {
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<Void> transferMoneyMethod(@RequestBody TransferMoneyRequest req) {
+    public ResponseEntity<Void> transferMoney(@RequestBody TransferMoneyRequest req) {
         transferMoney.execute(req);
         return ResponseEntity.noContent().build();
     }
