@@ -3,6 +3,7 @@ package SimplifyPay.application.services;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import SimplifyPay.application.dtos.TransferMoneyResponse;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
   
     @Override
     @Transactional
-    public void execute(TransferMoneyRequest req) {
+    public TransferMoneyResponse execute(TransferMoneyRequest req) {
         logger.info(req.toString());
         Validations.isPayerEqualToReceiver(req.payerId(), req.payeeId()); 
         logger.info("Request validated.");
@@ -42,7 +43,7 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
         var payeeWallet = walletRepo.findByUserId(req.payeeId());
 
         logger.info(
-            "Wallets founded in database \n " 
+            "Wallets founded in database \n"
             + payerWallet.get().toString() + "\n"
             + payeeWallet.get().toString()
         );
@@ -58,12 +59,13 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
         makePayment(payerWallet.get(), payeeWallet.get(), req.value());
         logger.info("Payment made");
 
-        createTransaction(payerWallet.get(), payeeWallet.get(), req.value());
+        var response = createTransaction(payerWallet.get(), payeeWallet.get(), req.value());
         logger.info("Transaction Created");
         notifyService.sendNotification();
+        return response;
     }
 
-    public void createTransaction(
+    public TransferMoneyResponse createTransaction(
         WalletEntity payer, WalletEntity payee, BigDecimal amount
         ) {
             var transaction = TransactionEntity.builder()
@@ -73,6 +75,13 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
                 .processedAt(LocalDateTime.now())
                 .build();  
             transactionRepo.save(transaction);
+
+            var response = TransferMoneyResponse.builder()
+                    .payer(transaction.getPayerWallet().getId())
+                    .payee(transaction.getPayeeWallet().getId())
+                    .value(transaction.getAmount())
+                    .build();
+            return response;
     }
 
     public void makePayment(

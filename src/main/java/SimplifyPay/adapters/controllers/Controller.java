@@ -2,6 +2,8 @@ package SimplifyPay.adapters.controllers;
 
 import java.util.Map;
 
+import SimplifyPay.application.dtos.TransferMoneyResponse;
+import SimplifyPay.domain.entities.TransactionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.EnableRetry;
@@ -36,9 +38,8 @@ public class Controller {
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<Void> transferMoney(@RequestBody TransferMoneyRequest req) {
-        transferMoney.execute(req);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<TransferMoneyResponse> transferMoney(@RequestBody TransferMoneyRequest req) {
+        var response = transferMoney.execute(req);
+        return ResponseEntity.ok().body(response);
     }
-    
 }

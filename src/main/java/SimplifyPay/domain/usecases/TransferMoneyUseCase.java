@@ -1,9 +1,10 @@
 package SimplifyPay.domain.usecases;
 
 import SimplifyPay.application.dtos.TransferMoneyRequest;
+import SimplifyPay.application.dtos.TransferMoneyResponse;
 
 public interface TransferMoneyUseCase {
-    
-    public void execute(TransferMoneyRequest request);
+
+    TransferMoneyResponse execute(TransferMoneyRequest request);
 
 }
