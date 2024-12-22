@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import SimplifyPay.application.services.strategy.CreateCommonStrategy;
+import SimplifyPay.application.services.strategy.CreateMerchantStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,28 +28,27 @@ public class CreateUserImpl implements CreateUserUseCase{
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
 
+    private final Map<Integer, CreateUserStrategy> mapStrategy = Map.of(
+            11, new CreateCommonStrategy(),
+            14, new CreateMerchantStrategy()
+    );
+
     @Override
     @Transactional
     public Map<String, Object> execute(CreateUserData request) {
+        var document = request.getDocument().replaceAll("[^0-9]", "");
+        var documentLength = document.length();
+        request.setDocument(document);
 
-        var user = UserEntity.builder()
-            .name(request.name())
-            .document(request.document())
-            .email(request.email())
-            .password(request.password())
-            .build();
-        
-        var wallet = WalletEntity.builder()
-            .id(UUID.randomUUID())
-            .user(user)
-            .type(WalletType.valueOf(request.walletType()))
-            .balance(BigDecimal.valueOf(0.00))
-            .build();
-        
-        user.setWallet(wallet);        
+        System.out.println("DOCUMENTO => "+ document);
+        System.out.println("DOCUMENTO TAMANHO=> "+ documentLength);
+
+        var result = mapStrategy.get(documentLength).execute(request);
+
+        UserEntity user = (UserEntity) result.get("user");
+        WalletEntity wallet = (WalletEntity) result.get("wallet");
+
         userRepository.save(user);
-
-        wallet.setUser(user);
         walletRepository.save(wallet);
 
         var response = new CreateUserResponse(

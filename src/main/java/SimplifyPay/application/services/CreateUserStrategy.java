@@ -1,5 +1,9 @@
 package SimplifyPay.application.services;
 
-public interface DocumentStrategy {
-    void validateDocument(String document);
+import SimplifyPay.application.dtos.CreateUserData;
+
+import java.util.Map;
+
+public interface CreateUserStrategy {
+    Map<String, Object> execute(CreateUserData request);
 }

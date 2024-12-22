@@ -2,6 +2,7 @@ package SimplifyPay.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -11,6 +12,8 @@ import SimplifyPay.exception.customExceptions.PayeeNotFound;
 import SimplifyPay.exception.customExceptions.PayerEqualsToPayeeException;
 import SimplifyPay.exception.customExceptions.PayerNotFound;
 import feign.FeignException;
+
+import java.util.Map;
 
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -99,4 +102,29 @@ public class RestExceptionHandler {
                 .build();
             return ResponseEntity.status(code).body(response);
     }
+
+
+    @ExceptionHandler
+    public ResponseEntity<RestErrorMessage> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex
+    ) {
+        var code = HttpStatus.CONFLICT;
+        var fieldErrors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> Map.of(
+                        "field", error.getField(),
+                        "rejectedValue", error.getRejectedValue(),
+                        "message", error.getDefaultMessage()
+                ))
+                .toList();
+
+        var response = RestErrorMessage.builder()
+                .statusCode(code.getReasonPhrase())
+                .message("Validation error: \n"+ fieldErrors)
+                .build();
+
+        return ResponseEntity.status(code).body(response);
+    }
+
 }
