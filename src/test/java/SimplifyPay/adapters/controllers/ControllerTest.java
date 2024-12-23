@@ -103,4 +103,41 @@ class ControllerTest {
         userTestScenario.deleteUserAndWallet(commonId);
         userTestScenario.deleteUserAndWallet(merchantId);
     }
+
+    @Test
+    @DisplayName("It should be possible to transfer if the balance is sufficient.")
+    void it_should_be_possible_to_transfer_if_the_balance_is_sufficient() throws Exception {
+        // Given
+        var commonUserResp = userTestScenario.createCommonUser();
+        var merchantUserResp = userTestScenario.createMerchantUser();
+        var commonId = userTestScenario.getIdFromResponse(commonUserResp);
+        var merchantId = userTestScenario.getIdFromResponse(merchantUserResp);
+        userTestScenario.updateBalance(commonId, INITIAL_BALANCE);
+        userTestScenario.updateBalance(merchantId, INITIAL_BALANCE);
+        testScenario.paymentAllowedByAuthorizer(true);
+
+        // When
+        var response = testScenario.executeTransferMoneyRequest(
+                AMOUNT_100, commonId, merchantId
+        );
+
+        // Then
+        var commonWallet = userTestScenario.getWallet(commonId);
+        var merchantWallet = userTestScenario.getWallet(merchantId);
+        assertThat(commonWallet.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE.subtract(AMOUNT_100));
+        assertThat(merchantWallet.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE.add(AMOUNT_100));
+
+        var expectedResponse = testScenario.expectedSuccessResponse(
+                commonWallet.get().getId(),
+                merchantWallet.get().getId(),
+                AMOUNT_100
+        );
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
+
+        userTestScenario.deleteTransactionByWalletPayerId(commonWallet.get().getId());
+        userTestScenario.deleteUserAndWallet(commonId);
+        userTestScenario.deleteUserAndWallet(merchantId);
+    }
 }
