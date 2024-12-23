@@ -64,5 +64,4 @@ public class TransferMoneyTestScenario {
         var objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(errorMessage);
     }
-
 }
