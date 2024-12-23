@@ -52,8 +52,9 @@ public class CreateUserImpl implements CreateUserUseCase{
         walletRepository.save(wallet);
 
         var response = new CreateUserResponse(
-            user.getName(), user.getEmail(),
-            user.getDocument(), wallet.getType()
+                user.getId(),
+                user.getName(), user.getEmail(),
+                user.getDocument(), wallet.getType()
         );
 
         Map<String, Object> map = new HashMap<>();
