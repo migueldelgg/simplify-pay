@@ -3,8 +3,8 @@ package SimplifyPay.adapters;
 import SimplifyPay.adapters.clients.AuthorizationClient;
 import SimplifyPay.adapters.clients.response.Authorize;
 import SimplifyPay.adapters.clients.response.Data;
-import SimplifyPay.application.dtos.ResponseUserData;
 import SimplifyPay.application.dtos.TransferMoneyRequest;
+import SimplifyPay.application.dtos.TransferMoneyResponse;
 import SimplifyPay.exception.RestErrorMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -63,5 +64,13 @@ public class TransferMoneyTestScenario {
 
         var objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(errorMessage);
+    }
+
+    public String expectedSuccessResponse(
+            UUID payer, UUID payee, BigDecimal value) throws JsonProcessingException
+    {
+        var response = new TransferMoneyResponse(payer, payee, value);
+        var objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(response);
     }
 }

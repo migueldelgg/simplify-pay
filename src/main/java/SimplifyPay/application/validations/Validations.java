@@ -51,7 +51,7 @@ public class Validations {
     ) {
         var balance = payerWallet.get().getBalance();
         String message = String.format(
-        "Saldo insuficiente para realizar a transação. Saldo: %s, Deseja transferir: %s", 
+        "Saldo insuficiente para realizar a transação.",
             balance, transferValue);
         if (balance.compareTo( BigDecimal.ZERO ) <= 0 || balance.compareTo( transferValue ) < 0) {
             throw new InsufficientBalanceException( message );

@@ -1,9 +1,11 @@
 package SimplifyPay.adapters;
 
+import SimplifyPay.adapters.repositories.TransactionRepositoryTest;
 import SimplifyPay.adapters.repositories.UserRepositoryTest;
 import SimplifyPay.adapters.repositories.WalletRepositoryTest;
 import SimplifyPay.application.dtos.CreateUserData;
 import SimplifyPay.application.dtos.ResponseUserData;
+import SimplifyPay.domain.entities.WalletEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
@@ -12,10 +14,14 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @Component
-public class CreateUserTestScenario {
+public class UserTestScenario {
 
     @Autowired
     private MockMvc mvc;
@@ -28,6 +34,9 @@ public class CreateUserTestScenario {
 
     @Autowired
     private WalletRepositoryTest walletRepository;
+
+    @Autowired
+    private TransactionRepositoryTest transactionRepository;
 
     public MockHttpServletResponse createCommonUser() throws Exception {
         var request = new CreateUserData("CommonUser",
@@ -66,7 +75,15 @@ public class CreateUserTestScenario {
         userRepository.deleteByUserId(id);
     }
 
-    public void updateBalance(Integer id) {
-        walletRepository.setBalance(id);
+    public void updateBalance(Integer id, BigDecimal value) {
+        walletRepository.setBalance(id, value);
+    }
+
+    public Optional<WalletEntity> getWallet(Integer id) {
+        return walletRepository.getByUserId(id);
+    }
+
+    public void deleteTransactionByWalletPayerId(UUID id) {
+        transactionRepository.deleteByPayerWalletId(id);
     }
 }
