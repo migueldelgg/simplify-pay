@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import SimplifyPay.adapters.clients.AuthorizationClient;
-import SimplifyPay.adapters.repositories.TransactionRepository;
-import SimplifyPay.adapters.repositories.WalletRepository;
+import SimplifyPay.infrastructure.clients.AuthorizationClient;
+import SimplifyPay.infrastructure.repositories.TransactionRepository;
+import SimplifyPay.infrastructure.repositories.WalletRepository;
 import SimplifyPay.application.dtos.TransferMoneyRequest;
 import SimplifyPay.application.validations.Validations;
 import SimplifyPay.domain.entities.TransactionEntity;

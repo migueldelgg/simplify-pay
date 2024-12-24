@@ -1,7 +1,6 @@
 package SimplifyPay.adapters.repositories;
 
 import SimplifyPay.domain.entities.UserEntity;
-import SimplifyPay.domain.entities.WalletEntity;
 import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

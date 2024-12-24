@@ -1,6 +1,6 @@
 package SimplifyPay.application.dtos;
 
-import SimplifyPay.application.notation.CpfCnpj;
+import SimplifyPay.application.annotations.CpfCnpj;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateUserData{
 
+    @NotBlank(message = "Name is required.")
     private String name;
 
     @NotBlank(message = "Document is required.")
@@ -26,5 +27,4 @@ public class CreateUserData{
 
     @NotBlank(message = "Password is required.")
     private String password;
-
 }
