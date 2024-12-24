@@ -1,9 +1,10 @@
-package SimplifyPay.application.services;
+package SimplifyPay.application.services.implementations;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import SimplifyPay.application.dtos.TransferMoneyResponse;
+import SimplifyPay.application.services.NotificationService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

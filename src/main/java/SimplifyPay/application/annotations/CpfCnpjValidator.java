@@ -1,4 +1,4 @@
-package SimplifyPay.application.notation;
+package SimplifyPay.application.annotations;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

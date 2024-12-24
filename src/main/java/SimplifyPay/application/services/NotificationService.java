@@ -1,5 +1,6 @@
 package SimplifyPay.application.services;
 
+import SimplifyPay.application.services.implementations.TransferMoneyImpl;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
@@ -8,7 +9,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import SimplifyPay.adapters.clients.NotificationClient;
+import SimplifyPay.infrastructure.clients.NotificationClient;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package SimplifyPay.adapters.repositories;
+package SimplifyPay.infrastructure.repositories;
 
 import java.util.UUID;
 

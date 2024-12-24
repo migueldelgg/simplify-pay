@@ -1,10 +1,6 @@
 package SimplifyPay.application.services.strategy;
 
-import SimplifyPay.adapters.repositories.UserRepository;
-import SimplifyPay.adapters.repositories.WalletRepository;
-import SimplifyPay.application.dtos.CreateUserData;
-import SimplifyPay.application.dtos.CreateUserResponse;
-import SimplifyPay.application.services.CreateUserStrategy;
+import SimplifyPay.application.dtos.CreateUserRequest;
 import SimplifyPay.domain.entities.UserEntity;
 import SimplifyPay.domain.entities.WalletEntity;
 import SimplifyPay.domain.entities.WalletType;
@@ -22,7 +18,7 @@ import java.util.UUID;
 public class CreateCommonStrategy implements CreateUserStrategy {
 
     @Override
-    public Map<String, Object> execute(CreateUserData request) {
+    public Map<String, Object> execute(CreateUserRequest request) {
 
         var user = UserEntity.builder()
                 .name(request.getName())

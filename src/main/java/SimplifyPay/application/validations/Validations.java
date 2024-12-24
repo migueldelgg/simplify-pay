@@ -11,7 +11,6 @@ import SimplifyPay.exception.customExceptions.PayeeNotFound;
 import SimplifyPay.exception.customExceptions.PayerEqualsToPayeeException;
 import SimplifyPay.exception.customExceptions.PayerNotFound;
 
-
 public class Validations {
 
     public static void isPayerEqualToReceiver(Integer payerId, Integer payeeId) {

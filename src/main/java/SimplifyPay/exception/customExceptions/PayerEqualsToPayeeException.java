@@ -8,5 +8,4 @@ public class PayerEqualsToPayeeException extends RuntimeException{
     public PayerEqualsToPayeeException(String message) {
         super(message); 
     }
-    
 }

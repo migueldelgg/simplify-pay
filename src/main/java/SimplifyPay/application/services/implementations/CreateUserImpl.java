@@ -1,8 +1,9 @@
-package SimplifyPay.application.services;
+package SimplifyPay.application.services.implementations;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import SimplifyPay.application.services.strategy.CreateUserStrategy;
 import SimplifyPay.application.services.strategy.CreateCommonStrategy;
 import SimplifyPay.application.services.strategy.CreateMerchantStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import SimplifyPay.infrastructure.repositories.UserRepository;
 import SimplifyPay.infrastructure.repositories.WalletRepository;
-import SimplifyPay.application.dtos.CreateUserData;
+import SimplifyPay.application.dtos.CreateUserRequest;
 import SimplifyPay.application.dtos.CreateUserResponse;
 import SimplifyPay.domain.entities.UserEntity;
 import SimplifyPay.domain.entities.WalletEntity;
@@ -32,7 +33,7 @@ public class CreateUserImpl implements CreateUserUseCase{
 
     @Override
     @Transactional
-    public Map<String, Object> execute(CreateUserData request) {
+    public Map<String, Object> execute(CreateUserRequest request) {
         var document = request.getDocument().replaceAll("[^0-9]", "");
         var documentLength = document.length();
         request.setDocument(document);

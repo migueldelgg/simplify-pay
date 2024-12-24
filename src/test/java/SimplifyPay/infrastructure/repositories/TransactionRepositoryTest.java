@@ -1,7 +1,6 @@
-package SimplifyPay.adapters.repositories;
+package SimplifyPay.infrastructure.repositories;
 
 import SimplifyPay.domain.entities.TransactionEntity;
-import SimplifyPay.domain.entities.UserEntity;
 import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

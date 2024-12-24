@@ -1,9 +1,9 @@
-package SimplifyPay.adapters;
+package SimplifyPay.infrastructure;
 
-import SimplifyPay.adapters.repositories.TransactionRepositoryTest;
-import SimplifyPay.adapters.repositories.UserRepositoryTest;
-import SimplifyPay.adapters.repositories.WalletRepositoryTest;
-import SimplifyPay.application.dtos.CreateUserData;
+import SimplifyPay.infrastructure.repositories.TransactionRepositoryTest;
+import SimplifyPay.infrastructure.repositories.UserRepositoryTest;
+import SimplifyPay.infrastructure.repositories.WalletRepositoryTest;
+import SimplifyPay.application.dtos.CreateUserRequest;
 import SimplifyPay.application.dtos.ResponseUserData;
 import SimplifyPay.domain.entities.WalletEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,7 @@ public class UserTestScenario {
     private MockMvc mvc;
 
     @Autowired
-    private JacksonTester<CreateUserData> createUserJson;
+    private JacksonTester<CreateUserRequest> createUserJson;
 
     @Autowired
     private UserRepositoryTest userRepository;
@@ -39,7 +39,7 @@ public class UserTestScenario {
     private TransactionRepositoryTest transactionRepository;
 
     public MockHttpServletResponse createCommonUser() throws Exception {
-        var request = new CreateUserData("CommonUser",
+        var request = new CreateUserRequest("CommonUser",
                 "019.327.760-36",
                 "common@gmail.com",
                 "123"
@@ -52,7 +52,7 @@ public class UserTestScenario {
     }
 
     public MockHttpServletResponse createMerchantUser() throws Exception {
-        var request = new CreateUserData("MerchantUser",
+        var request = new CreateUserRequest("MerchantUser",
                 "43.674.835/0001-30",
                 "merchant@gmail.com",
                 "123"

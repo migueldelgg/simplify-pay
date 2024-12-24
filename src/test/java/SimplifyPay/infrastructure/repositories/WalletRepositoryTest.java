@@ -1,4 +1,4 @@
-package SimplifyPay.adapters.repositories;
+package SimplifyPay.infrastructure.repositories;
 
 import SimplifyPay.domain.entities.WalletEntity;
 import feign.Param;

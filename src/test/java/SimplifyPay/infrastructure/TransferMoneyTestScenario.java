@@ -1,8 +1,8 @@
-package SimplifyPay.adapters;
+package SimplifyPay.infrastructure;
 
-import SimplifyPay.adapters.clients.AuthorizationClient;
-import SimplifyPay.adapters.clients.response.Authorize;
-import SimplifyPay.adapters.clients.response.Data;
+import SimplifyPay.infrastructure.clients.AuthorizationClient;
+import SimplifyPay.infrastructure.clients.response.Authorize;
+import SimplifyPay.infrastructure.clients.response.Data;
 import SimplifyPay.application.dtos.TransferMoneyRequest;
 import SimplifyPay.application.dtos.TransferMoneyResponse;
 import SimplifyPay.exception.RestErrorMessage;

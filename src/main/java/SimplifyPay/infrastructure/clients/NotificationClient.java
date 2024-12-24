@@ -1,4 +1,4 @@
-package SimplifyPay.adapters.clients;
+package SimplifyPay.infrastructure.clients;
 
 import java.util.concurrent.CompletableFuture;
 

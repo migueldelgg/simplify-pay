@@ -1,9 +1,8 @@
-package SimplifyPay.adapters.controllers;
+package SimplifyPay.infrastructure.controllers;
 
 import java.util.Map;
 
 import SimplifyPay.application.dtos.TransferMoneyResponse;
-import SimplifyPay.domain.entities.TransactionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.EnableRetry;
@@ -13,13 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import SimplifyPay.application.dtos.CreateUserData;
+import SimplifyPay.application.dtos.CreateUserRequest;
 import SimplifyPay.application.dtos.TransferMoneyRequest;
-import SimplifyPay.application.services.CreateUserImpl;
-import SimplifyPay.application.services.TransferMoneyImpl;
+import SimplifyPay.application.services.implementations.CreateUserImpl;
+import SimplifyPay.application.services.implementations.TransferMoneyImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 
 @RestController
 @RequestMapping("/v1")
@@ -32,7 +30,7 @@ public class Controller {
     private final TransferMoneyImpl transferMoney;
     
     @PostMapping("/user")
-    public ResponseEntity<Map<String, Object>> createUserAndWallet(@RequestBody @Valid CreateUserData input) {
+    public ResponseEntity<Map<String, Object>> createUserAndWallet(@RequestBody @Valid CreateUserRequest input) {
         var response = createUserImpl.execute(input);
         return ResponseEntity.ok().body(response);
     }

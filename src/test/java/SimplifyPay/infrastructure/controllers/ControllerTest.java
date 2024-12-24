@@ -1,8 +1,7 @@
-package SimplifyPay.adapters.controllers;
+package SimplifyPay.infrastructure.controllers;
 
-import SimplifyPay.adapters.UserTestScenario;
-import SimplifyPay.adapters.TransferMoneyTestScenario;
-import SimplifyPay.application.dtos.TransferMoneyResponse;
+import SimplifyPay.infrastructure.UserTestScenario;
+import SimplifyPay.infrastructure.TransferMoneyTestScenario;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

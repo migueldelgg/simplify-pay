@@ -1,4 +1,4 @@
-package SimplifyPay.adapters.clients.response;
+package SimplifyPay.infrastructure.clients.response;
 
 import lombok.Builder;
 
