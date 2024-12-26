@@ -4,5 +4,4 @@ import lombok.Builder;
 
 @Builder
 public record Data (Boolean authorization){
-    
 }

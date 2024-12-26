@@ -17,7 +17,19 @@ import java.util.Map;
 
 @ControllerAdvice
 public class RestExceptionHandler {
-    
+
+    @ExceptionHandler
+    public ResponseEntity<RestErrorMessage> handleException(
+            Exception ex
+    ) {
+        var code = HttpStatus.INTERNAL_SERVER_ERROR;
+        var response = RestErrorMessage.builder()
+                .statusCode(code.getReasonPhrase())
+                .message(ex.getMessage())
+                .build();
+        return ResponseEntity.status(code).body(response);
+    }
+
     @ExceptionHandler
     public ResponseEntity<RestErrorMessage> handleFeignException(
         FeignException ex

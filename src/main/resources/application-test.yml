@@ -1,0 +1,5 @@
+authorization-dev-tools:
+  url: http://localhost:8080
+
+server:
+  port: 9090

@@ -14,7 +14,6 @@ import java.util.UUID;
 public interface TransactionRepositoryTest extends JpaRepository<TransactionEntity, UUID>  {
 
     @Modifying
-    @Transactional
     @Query(value = "DELETE FROM \"transaction\" WHERE payer_wallet_id = :inputId", nativeQuery = true)
     void deleteByPayerWalletId(@Param("inputId") UUID inputId);
 

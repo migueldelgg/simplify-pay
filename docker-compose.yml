@@ -1,4 +1,11 @@
 services:
+  wiremock:
+    image: "wiremock/wiremock:latest"
+    container_name: wiremock-standalone
+    entrypoint: [ "/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose" ]
+    ports:
+      - "8080:8080"
+
   postgres:
     image: postgres:15
     container_name: simplifypay_postgres
@@ -13,3 +20,4 @@ services:
 
 volumes:
   postgres_data:
+  wiremock_data:
