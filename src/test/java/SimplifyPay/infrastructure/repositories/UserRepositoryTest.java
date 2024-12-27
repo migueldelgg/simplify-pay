@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserRepositoryTest extends JpaRepository<UserEntity, Integer> {
 
     @Modifying
-    @Transactional
     @Query(value = "DELETE FROM \"user\" WHERE id = :inputId", nativeQuery = true)
     void deleteByUserId(@Param("inputId") Integer inputId);
 }

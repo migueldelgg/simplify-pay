@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -20,7 +19,6 @@ import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@Component
 public class UserTestScenario {
 
     @Autowired
@@ -75,8 +73,12 @@ public class UserTestScenario {
         userRepository.deleteByUserId(id);
     }
 
-    public void updateBalance(Integer id, BigDecimal value) {
-        walletRepository.setBalance(id, value);
+    public void updateBalance(WalletEntity entity) {
+        walletRepository.saveAndFlush(entity);
+
+        /*walletRepository.setBalance(id, value);
+        Optional<WalletEntity> updatedWallet = walletRepository.getByUserId(id);
+        updatedWallet.ifPresent(walletEntity -> System.out.println("Updated balance: " + walletEntity.getBalance()));*/
     }
 
     public Optional<WalletEntity> getWallet(Integer id) {

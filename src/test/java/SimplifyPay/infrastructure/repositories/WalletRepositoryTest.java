@@ -18,13 +18,14 @@ public interface WalletRepositoryTest extends JpaRepository<WalletEntity, UUID> 
     @Query(value = "SELECT * FROM wallet WHERE user_id = :inputId", nativeQuery = true)
     Optional<WalletEntity> getByUserId(@Param("inputId") Integer inputId);
 
+    /*@Modifying
     @Transactional
-    @Modifying
-    @Query(value = "UPDATE wallet SET balance = :value, updated_at = NOW() WHERE user_id = :inputId", nativeQuery = true)
-    void setBalance(@Param("inputId") Integer inputId, @Param("value") BigDecimal value);
+    @Query("UPDATE Wallet w SET w.balance = :value, w.updatedAt = CURRENT_TIMESTAMP WHERE w.user.id = :inputId")
+    void setBalance(@Param("inputId") Integer inputId, @Param("value") BigDecimal value);*/
+
 
     @Modifying
-    @Transactional
     @Query(value = "DELETE FROM wallet WHERE user_id = :inputId", nativeQuery = true)
     void deleteByUserId(@Param("inputId") Integer inputId);
+
 }

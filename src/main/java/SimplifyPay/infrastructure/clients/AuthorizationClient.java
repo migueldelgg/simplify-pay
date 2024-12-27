@@ -7,7 +7,7 @@ import SimplifyPay.infrastructure.clients.response.Authorize;
 
 @FeignClient(
     value = "authorization-dev-tools", 
-    url="https://util.devi.tools/api/v2"
+    url="${authorization-client.base-url}"
 )
 public interface AuthorizationClient {
     
