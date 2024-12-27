@@ -8,7 +8,6 @@ import org.wiremock.spring.EnableWireMock;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 
-@SpringBootTest(classes = MockingAuth.class)
 @EnableWireMock({@ConfigureWireMock(name = "auth_mock", port = 9000)})
 public class MockingAuth {
 

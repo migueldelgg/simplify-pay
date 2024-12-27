@@ -187,28 +187,68 @@ class ControllerTest {
 
     @Test
     void shouldThrowExceptionWhenAuthorizationFails() throws Exception {
+        // Given: IDs dos usuários
+        var commonUserId = userTestScenario.getIdFromResponse(commonUserResponse);
+        var merchantUserId = userTestScenario.getIdFromResponse(merchantUserResponse);
+
+        // Atualiza os saldos
+        var commonWalletToUpdate = userTestScenario.getWallet(commonUserId);
+        commonWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+
+        var merchantWalletToUpdate = userTestScenario.getWallet(merchantUserId);
+        merchantWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+
+        userTestScenario.updateBalance(commonWalletToUpdate.get());
+        userTestScenario.updateBalance(merchantWalletToUpdate.get());
+
         stubAuthorizationForbidden();
 
         // When: Tenta realizar a transferência
         var response = testScenario.executeTransferMoneyRequest(
-                AMOUNT_125, 3, 38
+                AMOUNT_100, commonUserId, merchantUserId
         );
 
-        // Executar e esperar a exceção
         assertThat(response.getStatus()).isEqualTo(403);
     }
 
     @Test
     void shouldTransferMoneyWhenAuthorizationWorks() throws Exception {
+        // Given: IDs dos usuários
+        var commonUserId = userTestScenario.getIdFromResponse(commonUserResponse);
+        var merchantUserId = userTestScenario.getIdFromResponse(merchantUserResponse);
+
+        // Atualiza os saldos
+        var commonWalletToUpdate = userTestScenario.getWallet(commonUserId);
+        commonWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+
+        var merchantWalletToUpdate = userTestScenario.getWallet(merchantUserId);
+        merchantWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+
+        userTestScenario.updateBalance(commonWalletToUpdate.get());
+        userTestScenario.updateBalance(merchantWalletToUpdate.get());
+
         stubAuthorizationSuccess();
 
         // When: Tenta realizar a transferência
         var response = testScenario.executeTransferMoneyRequest(
-                AMOUNT_125, 3, 38
+                AMOUNT_100, commonUserId, merchantUserId
         );
 
-        // Executar e esperar a exceção
+        // Then
+        var commonWalletAfter = userTestScenario.getWallet(commonUserId);
+        var merchantWalletAfter = userTestScenario.getWallet(merchantUserId);
+
+        assertThat(commonWalletAfter.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE.subtract(AMOUNT_100));
+        assertThat(merchantWalletAfter.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE.add(AMOUNT_100));
+
+        var expectedResponse = testScenario.expectedSuccessResponse(
+                commonWalletAfter.get().getId(),
+                merchantWalletAfter.get().getId(),
+                AMOUNT_100
+        );
+
         assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
     }
 
     @AfterEach
