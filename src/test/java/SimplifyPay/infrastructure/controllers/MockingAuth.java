@@ -1,52 +1,39 @@
 package SimplifyPay.infrastructure.controllers;
 
-import SimplifyPay.infrastructure.TestConfig;
-import SimplifyPay.infrastructure.clients.AuthorizationClient;
-import SimplifyPay.infrastructure.clients.response.Authorize;
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.wiremock.spring.ConfigureWireMock;
+import org.wiremock.spring.EnableWireMock;
 
-import java.lang.annotation.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 
-import static SimplifyPay.infrastructure.AuthorizationClientTest.stubAuthorizationSuccess;
-import static SimplifyPay.infrastructure.AuthorizationClientTest.stubAuthorizationForbidden;
-import static org.assertj.core.api.Assertions.assertThat;
-
-@SpringBootTest()
-@AutoConfigureWireMock(port = 8080)
-@ExtendWith(
-        {
-                WireMockExtension.class,
-                SpringExtension.class,
-        }
-)
+@SpringBootTest(classes = MockingAuth.class)
+@EnableWireMock({@ConfigureWireMock(name = "auth_mock", port = 9000)})
 public class MockingAuth {
 
-    @Autowired
-    private AuthorizationClient authorizationClient;
+    @Value("${wiremock.server.baseUrl}")
+    private String wireMockUrl;
 
-    @Test
-    public void shouldReturnSuccessResponse() throws Exception {
-        stubAuthorizationSuccess();
+    public static void stubAuthorizationSuccess() throws Exception {
+        //var json = authorizeJacksonTester.write(new Authorize("success", new Data(true))).getJson();
 
-        Authorize response = authorizationClient.execute();
-        assertThat(response.status()).isEqualTo("success");
-        assertThat(response.data().authorization()).isTrue();
+        System.out.println("Stubbing /authorize for success");
+        stubFor(get(urlEqualTo("/authorize"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"status\":\"success\",\"data\":{\"authorized\":true}}")));
     }
 
-    @Test
-    public void shouldReturnForbiddenResponse() throws Exception {
-        stubAuthorizationForbidden();
+    public static void stubAuthorizationForbidden() throws Exception {
+        //var json = authorizeJacksonTester.write(new Authorize("fail", new Data(false))).getJson();
 
-        Authorize response = authorizationClient.execute();
-        assertThat(response.status()).isEqualTo("fail");
-        assertThat(response.data().authorization()).isFalse();
+        System.out.println("Stubbing /authorize for forbidden");
+        stubFor(get(urlEqualTo("/authorize"))
+                .willReturn(aResponse()
+                        .withStatus(403)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"status\":\"fail\",\"data\":{\"authorized\":false}}")));
     }
 }

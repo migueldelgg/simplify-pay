@@ -4,14 +4,10 @@ import SimplifyPay.infrastructure.TestConfig;
 import SimplifyPay.infrastructure.UserTestScenario;
 import SimplifyPay.infrastructure.TransferMoneyTestScenario;
 import SimplifyPay.infrastructure.clients.AuthorizationClient;
-import SimplifyPay.infrastructure.clients.response.Authorize;
-import SimplifyPay.infrastructure.clients.response.Data;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,17 +15,24 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.wiremock.spring.ConfigureWireMock;
+import org.wiremock.spring.EnableWireMock;
 
 import java.math.BigDecimal;
 
+import static SimplifyPay.infrastructure.controllers.MockingAuth.stubAuthorizationForbidden;
+import static SimplifyPay.infrastructure.controllers.MockingAuth.stubAuthorizationSuccess;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureJsonTesters
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles("test")
+@EnableWireMock({@ConfigureWireMock(name = "auth_mock", port = 9000)})
 @Import(TestConfig.class)
 class ControllerTest {
     // Constantes para teste
@@ -75,7 +78,7 @@ class ControllerTest {
         userTestScenario.updateBalance(commonWalletToUpdate.get());
         userTestScenario.updateBalance(merchantWalletToUpdate.get());
 
-        paymentAllowedByAuthorizer(true);
+        stubAuthorizationSuccess();
 
         // When
         var response = testScenario.executeTransferMoneyRequest(
@@ -115,7 +118,7 @@ class ControllerTest {
         userTestScenario.updateBalance(merchantWalletToUpdate.get());
 
         // Mock do autorizador
-        paymentAllowedByAuthorizer(true);
+        stubAuthorizationSuccess();
 
         // When: Tenta realizar a transferência
         var response = testScenario.executeTransferMoneyRequest(
@@ -158,8 +161,7 @@ class ControllerTest {
         userTestScenario.updateBalance(commonWalletToUpdate.get());
         userTestScenario.updateBalance(merchantWalletToUpdate.get());
 
-        // Mock do autorizador
-        paymentAllowedByAuthorizer(true);
+        stubAuthorizationSuccess();
 
         // When: Tenta realizar a transferência
         var response = testScenario.executeTransferMoneyRequest(
@@ -185,11 +187,8 @@ class ControllerTest {
 
     @Test
     void shouldThrowExceptionWhenAuthorizationFails() throws Exception {
-        // Configurar o mock para retornar "não autorizado"
-        Mockito.when(authorizationClient.execute())
-                .thenReturn(new Authorize("fail", new Data(false)));
+        stubAuthorizationForbidden();
 
-        // Dados da requisição
         // When: Tenta realizar a transferência
         var response = testScenario.executeTransferMoneyRequest(
                 AMOUNT_125, 3, 38
@@ -197,68 +196,29 @@ class ControllerTest {
 
         // Executar e esperar a exceção
         assertThat(response.getStatus()).isEqualTo(403);
-
-        Mockito.verify(authorizationClient, Mockito.times(1)).execute();
     }
 
-    /*@Test
-    void shouldTransferWhenAuthorizationWorks() throws Exception {
+    @Test
+    void shouldTransferMoneyWhenAuthorizationWorks() throws Exception {
+        stubAuthorizationSuccess();
 
-        var pagadorAntesDePagar = userTestScenario.getWallet(3);
-        var recebidorAntesDeReceber = userTestScenario.getWallet(38);
-
-        // Configurar o mock para retornar "autorizado"
-        Mockito.when(authorizationClient.execute())
-                .thenReturn(new Authorize("success", new Data(true)));
-
-        // Dados da requisição
         // When: Tenta realizar a transferência
         var response = testScenario.executeTransferMoneyRequest(
                 AMOUNT_125, 3, 38
         );
 
-        var pagadorDepoisDePagar = userTestScenario.getWallet(3);
-        var recebidorDepoisDeReceber = userTestScenario.getWallet(38);
-
-        var expectedResponse = testScenario.expectedSuccessResponse(
-                pagadorDepoisDePagar.get().getId(),
-                recebidorDepoisDeReceber.get().getId(),
-                AMOUNT_125
-        );
-
-        assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
+        // Executar e esperar a exceção
         assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(pagadorAntesDePagar.get().getBalance())
-                .isEqualByComparingTo(pagadorDepoisDePagar.get().getBalance().add(AMOUNT_125.negate()));
-        assertThat(recebidorAntesDeReceber.get().getBalance())
-                .isEqualByComparingTo(recebidorDepoisDeReceber.get().getBalance().subtract(AMOUNT_125.negate()));
-
-        Mockito.verify(authorizationClient, Mockito.times(1)).execute();
-    }*/
-
-
-    // PARA TESTAR ISSO VOU PRECISAR USAR WIREMOCK
-    public void paymentAllowedByAuthorizer(Boolean value) {
-        if (Boolean.FALSE.equals(value)) {
-            Mockito.when(authorizationClient.execute())
-                    .thenReturn(new Authorize("fail", new Data(value)));
-        } else {
-            Mockito.when(authorizationClient.execute())
-                    .thenReturn(new Authorize("success", new Data(value)));
-        }
     }
 
     @AfterEach
     void cleanupDatabase() throws Exception {
-        // pegar o id do usuario
         var commonId = userTestScenario.getIdFromResponse(commonUserResponse);
         var merchantId = userTestScenario.getIdFromResponse(merchantUserResponse);
-        // pegar a wallet do pagador
+
         var payerWallet = userTestScenario.getWallet(commonId);
-        // apagar transaction usando wallet id
+
         userTestScenario.deleteTransactionByWalletPayerId(payerWallet.get().getId());
-        // apagar wallet usando user id
-        // apagar user by id
         userTestScenario.deleteUserAndWallet(commonId);
         userTestScenario.deleteUserAndWallet(merchantId);
     }
