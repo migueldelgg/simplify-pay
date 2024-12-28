@@ -1,5 +1,7 @@
 package SimplifyPay.exception;
 
+import SimplifyPay.application.services.implementations.TransferMoneyImpl;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,6 +20,9 @@ import java.util.Map;
 @ControllerAdvice
 public class RestExceptionHandler {
 
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(TransferMoneyImpl.class);
+
+
     @ExceptionHandler
     public ResponseEntity<RestErrorMessage> handleException(
             Exception ex
@@ -34,6 +39,7 @@ public class RestExceptionHandler {
     public ResponseEntity<RestErrorMessage> handleFeignException(
         FeignException ex
         ) {
+        logger.info("Serviço autorizador externo bloqueou a transferência.");
             var customMessage = "Pagamento não autorizado.";
             var code = HttpStatus.FORBIDDEN;
             var response = RestErrorMessage.builder()
