@@ -43,13 +43,10 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
         var payerWallet = walletRepo.findByUserId(req.payerId());
         var payeeWallet = walletRepo.findByUserId(req.payeeId());
 
-        logger.info(
-            "Wallets founded in database \n"
-            + payerWallet.get().toString() + "\n"
-            + payeeWallet.get().toString()
-        );
-
         Validations.userExist(payerWallet, payeeWallet);
+
+        logger.info("Wallets founded in database \n PayerType: {}\n PayeeType: {}", payerWallet.get().getType(), payeeWallet.get().getType());
+
         Validations.isWalletTypeCommon(payerWallet);
         Validations.isSufficientBalance(payerWallet, req.value());
         logger.info("Data validated");

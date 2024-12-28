@@ -6,5 +6,4 @@ import SimplifyPay.application.dtos.TransferMoneyResponse;
 public interface TransferMoneyUseCase {
 
     TransferMoneyResponse execute(TransferMoneyRequest request);
-
 }
