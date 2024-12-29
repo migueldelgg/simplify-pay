@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 
 public class Validations {
 
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(TransferMoneyImpl.class);
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(Validations.class);
 
     public static void isPayerEqualToReceiver(Integer payerId, Integer payeeId) {
         logger.info("Verificando se os Ids passados na requisição são iguais.");
@@ -32,7 +32,7 @@ public class Validations {
     ) {
         logger.info("Verificando se os usuarios existem no banco de dados.");
 
-        if(!payerWallet.isPresent()) {
+        if(payerWallet.isEmpty()) {
             throw new PayerNotFound(
                 "Pagador não encontrado."
             );
@@ -40,7 +40,7 @@ public class Validations {
 
         logger.info("Pagador encontrado, verificando recebidor.");
 
-        if(!payeeWallet.isPresent()) {
+        if(payeeWallet.isEmpty()) {
             throw new PayeeNotFound(
                 "Recebidor não encontrado."
             );
@@ -66,10 +66,8 @@ public class Validations {
         Optional<WalletEntity> payerWallet, BigDecimal transferValue
     ) {
         logger.info("Verificando se o saldo da carteira é suficiente.");
-
         var balance = payerWallet.get().getBalance();
-        String message = String.format(
-        "Saldo insuficiente para realizar a transação.");
+        String message = "Saldo insuficiente para realizar a transação.";
         if (balance.compareTo( BigDecimal.ZERO ) <= 0 || balance.compareTo( transferValue ) < 0) {
             logger.info("Saldo suficiente, essa validação terminou.");
             throw new InsufficientBalanceException( message );

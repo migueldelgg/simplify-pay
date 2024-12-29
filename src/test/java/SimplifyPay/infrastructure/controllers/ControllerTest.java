@@ -57,7 +57,6 @@ class ControllerTest {
         merchantUserResponse = userTestScenario.createMerchantUser();
     }
 
-
     @Test
     @DisplayName("Merchant cant do it transfer money.")
     void should_not_be_possible_merchant_user_transfer_money_to_common_user() throws Exception {
@@ -139,7 +138,6 @@ class ControllerTest {
         assertThat(response.getStatus()).isEqualTo(400);
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
     }
-
 
     @Test
     @DisplayName("It should be possible to transfer if the balance is sufficient.")
@@ -247,7 +245,6 @@ class ControllerTest {
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
     }
-
 
     @AfterEach
     void cleanupDatabase() throws Exception {

@@ -40,7 +40,8 @@ public class TransferMoneyTestScenario {
     {
         var errorMessage = new RestErrorMessage(
                 reasonPhrase,
-                expectedMessage);
+                expectedMessage
+        );
 
         var objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(errorMessage);
@@ -49,7 +50,12 @@ public class TransferMoneyTestScenario {
     public String expectedSuccessResponse(
             UUID payer, UUID payee, BigDecimal value) throws JsonProcessingException
     {
-        var response = new TransferMoneyResponse(payer, payee, value);
+        var response = new TransferMoneyResponse(
+                payer,
+                payee,
+                value
+        );
+
         var objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(response);
     }

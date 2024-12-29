@@ -74,10 +74,6 @@ public class UserTestScenario {
 
     public void updateBalance(WalletEntity entity) {
         walletRepository.saveAndFlush(entity);
-
-        /*walletRepository.setBalance(id, value);
-        Optional<WalletEntity> updatedWallet = walletRepository.getByUserId(id);
-        updatedWallet.ifPresent(walletEntity -> System.out.println("Updated balance: " + walletEntity.getBalance()));*/
     }
 
     public Optional<WalletEntity> getWallet(Integer id) {
