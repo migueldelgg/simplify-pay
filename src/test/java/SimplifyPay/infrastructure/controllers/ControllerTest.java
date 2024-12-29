@@ -3,11 +3,11 @@ package SimplifyPay.infrastructure.controllers;
 import SimplifyPay.infrastructure.TestConfig;
 import SimplifyPay.infrastructure.UserTestScenario;
 import SimplifyPay.infrastructure.TransferMoneyTestScenario;
-import SimplifyPay.infrastructure.clients.AuthorizationClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
@@ -35,22 +34,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @EnableWireMock({@ConfigureWireMock(name = "auth_mock", port = 9000)})
 @Import(TestConfig.class)
 class ControllerTest {
+
+    private final Logger logger = org.slf4j.LoggerFactory.getLogger(ControllerTest.class);
+
     // Constantes para teste
-    final BigDecimal AMOUNT_100 = new BigDecimal("100.00");
-    final BigDecimal AMOUNT_125 = new BigDecimal("125.00");
     final BigDecimal AMOUNT_0 = new BigDecimal("0.00");
-    final BigDecimal INITIAL_BALANCE = new BigDecimal("1000.00");
+    final BigDecimal AMOUNT_100 = new BigDecimal("100.00");
+    final BigDecimal AMOUNT_1000 = new BigDecimal("1000.00");
 
     @Autowired
     private TransferMoneyTestScenario testScenario;
 
     @Autowired
     private UserTestScenario userTestScenario;
-
-    private AuthorizationClient authorizationClient;
-
-    @Autowired
-    private MockMvc mvc;
 
     MockHttpServletResponse commonUserResponse;
     MockHttpServletResponse merchantUserResponse;
@@ -61,6 +57,7 @@ class ControllerTest {
         merchantUserResponse = userTestScenario.createMerchantUser();
     }
 
+
     @Test
     @DisplayName("Merchant cant do it transfer money.")
     void should_not_be_possible_merchant_user_transfer_money_to_common_user() throws Exception {
@@ -70,10 +67,10 @@ class ControllerTest {
 
         // Atualiza os saldos
         var commonWalletToUpdate = userTestScenario.getWallet(commonUserId);
-        commonWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+        commonWalletToUpdate.get().setBalance(AMOUNT_1000);
 
         var merchantWalletToUpdate = userTestScenario.getWallet(merchantUserId);
-        merchantWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+        merchantWalletToUpdate.get().setBalance(AMOUNT_1000);
 
         userTestScenario.updateBalance(commonWalletToUpdate.get());
         userTestScenario.updateBalance(merchantWalletToUpdate.get());
@@ -88,8 +85,8 @@ class ControllerTest {
         // Then
         var commonWallet = userTestScenario.getWallet(commonUserId);
         var merchantWallet = userTestScenario.getWallet(merchantUserId);
-        assertThat(commonWallet.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE);
-        assertThat(merchantWallet.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE);
+        assertThat(commonWallet.get().getBalance()).isEqualByComparingTo(AMOUNT_1000);
+        assertThat(merchantWallet.get().getBalance()).isEqualByComparingTo(AMOUNT_1000);
 
         var expectedResponse = testScenario
                 .expectedErrorResponse(
@@ -153,10 +150,10 @@ class ControllerTest {
 
         // Atualiza os saldos
         var commonWalletToUpdate = userTestScenario.getWallet(commonUserId);
-        commonWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+        commonWalletToUpdate.get().setBalance(AMOUNT_1000);
 
         var merchantWalletToUpdate = userTestScenario.getWallet(merchantUserId);
-        merchantWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+        merchantWalletToUpdate.get().setBalance(AMOUNT_1000);
 
         userTestScenario.updateBalance(commonWalletToUpdate.get());
         userTestScenario.updateBalance(merchantWalletToUpdate.get());
@@ -172,8 +169,8 @@ class ControllerTest {
         var commonWalletAfter = userTestScenario.getWallet(commonUserId);
         var merchantWalletAfter = userTestScenario.getWallet(merchantUserId);
 
-        assertThat(commonWalletAfter.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE.subtract(AMOUNT_100));
-        assertThat(merchantWalletAfter.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE.add(AMOUNT_100));
+        assertThat(commonWalletAfter.get().getBalance()).isEqualByComparingTo(AMOUNT_1000.subtract(AMOUNT_100));
+        assertThat(merchantWalletAfter.get().getBalance()).isEqualByComparingTo(AMOUNT_1000.add(AMOUNT_100));
 
         var expectedResponse = testScenario.expectedSuccessResponse(
                 commonWalletAfter.get().getId(),
@@ -193,10 +190,10 @@ class ControllerTest {
 
         // Atualiza os saldos
         var commonWalletToUpdate = userTestScenario.getWallet(commonUserId);
-        commonWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+        commonWalletToUpdate.get().setBalance(AMOUNT_1000);
 
         var merchantWalletToUpdate = userTestScenario.getWallet(merchantUserId);
-        merchantWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+        merchantWalletToUpdate.get().setBalance(AMOUNT_1000);
 
         userTestScenario.updateBalance(commonWalletToUpdate.get());
         userTestScenario.updateBalance(merchantWalletToUpdate.get());
@@ -219,10 +216,10 @@ class ControllerTest {
 
         // Atualiza os saldos
         var commonWalletToUpdate = userTestScenario.getWallet(commonUserId);
-        commonWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+        commonWalletToUpdate.get().setBalance(AMOUNT_1000);
 
         var merchantWalletToUpdate = userTestScenario.getWallet(merchantUserId);
-        merchantWalletToUpdate.get().setBalance(INITIAL_BALANCE);
+        merchantWalletToUpdate.get().setBalance(AMOUNT_1000);
 
         userTestScenario.updateBalance(commonWalletToUpdate.get());
         userTestScenario.updateBalance(merchantWalletToUpdate.get());
@@ -238,8 +235,8 @@ class ControllerTest {
         var commonWalletAfter = userTestScenario.getWallet(commonUserId);
         var merchantWalletAfter = userTestScenario.getWallet(merchantUserId);
 
-        assertThat(commonWalletAfter.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE.subtract(AMOUNT_100));
-        assertThat(merchantWalletAfter.get().getBalance()).isEqualByComparingTo(INITIAL_BALANCE.add(AMOUNT_100));
+        assertThat(commonWalletAfter.get().getBalance()).isEqualByComparingTo(AMOUNT_1000.subtract(AMOUNT_100));
+        assertThat(merchantWalletAfter.get().getBalance()).isEqualByComparingTo(AMOUNT_1000.add(AMOUNT_100));
 
         var expectedResponse = testScenario.expectedSuccessResponse(
                 commonWalletAfter.get().getId(),
@@ -250,6 +247,7 @@ class ControllerTest {
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
     }
+
 
     @AfterEach
     void cleanupDatabase() throws Exception {
