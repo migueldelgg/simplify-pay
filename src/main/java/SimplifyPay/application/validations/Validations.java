@@ -71,8 +71,8 @@ public class Validations {
         String message = String.format(
         "Saldo insuficiente para realizar a transação.");
         if (balance.compareTo( BigDecimal.ZERO ) <= 0 || balance.compareTo( transferValue ) < 0) {
+            logger.info("Saldo suficiente, essa validação terminou.");
             throw new InsufficientBalanceException( message );
         }
-        logger.info("Saldo suficiente, essa validação terminou.");
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WalletRepository extends JpaRepository<WalletEntity, UUID>{
 
-    @Query(value = "SELECT * FROM wallet WHERE user_id = :inputId", nativeQuery = true)
+    @Query(value = "SELECT * FROM wallet WHERE user_id = :inputId FOR UPDATE", nativeQuery = true)
     Optional<WalletEntity> findByUserId(Integer inputId);
 
 }

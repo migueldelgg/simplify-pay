@@ -14,4 +14,9 @@ public class TestConfig {
     public UserTestScenario userTestScenario() {
         return new UserTestScenario();
     }
+
+    @Bean
+    public AcidTestScenario acidTestScenario() {
+        return new AcidTestScenario();
+    }
 }
