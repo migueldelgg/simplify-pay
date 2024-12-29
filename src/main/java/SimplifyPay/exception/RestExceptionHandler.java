@@ -20,8 +20,7 @@ import java.util.Map;
 @ControllerAdvice
 public class RestExceptionHandler {
 
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(TransferMoneyImpl.class);
-
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(RestExceptionHandler.class);
 
     @ExceptionHandler
     public ResponseEntity<RestErrorMessage> handleException(
@@ -121,7 +120,6 @@ public class RestExceptionHandler {
             return ResponseEntity.status(code).body(response);
     }
 
-
     @ExceptionHandler
     public ResponseEntity<RestErrorMessage> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex
@@ -144,5 +142,4 @@ public class RestExceptionHandler {
 
         return ResponseEntity.status(code).body(response);
     }
-
 }

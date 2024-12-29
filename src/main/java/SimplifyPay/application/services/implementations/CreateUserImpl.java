@@ -6,6 +6,7 @@ import java.util.Map;
 import SimplifyPay.application.services.strategy.CreateUserStrategy;
 import SimplifyPay.application.services.strategy.CreateCommonStrategy;
 import SimplifyPay.application.services.strategy.CreateMerchantStrategy;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(onConstructor= @__(@Autowired))
 public class CreateUserImpl implements CreateUserUseCase{
 
+    private final Logger logger = org.slf4j.LoggerFactory.getLogger(CreateUserImpl.class);
+
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
 
@@ -38,8 +41,8 @@ public class CreateUserImpl implements CreateUserUseCase{
         var documentLength = document.length();
         request.setDocument(document);
 
-        System.out.println("DOCUMENTO => "+ document);
-        System.out.println("DOCUMENTO TAMANHO=> "+ documentLength);
+        logger.info("Document from Request: {}", document);
+        logger.info("Document lenght: {}", documentLength);
 
         var result = mapStrategy.get(documentLength).execute(request);
 
@@ -59,5 +62,4 @@ public class CreateUserImpl implements CreateUserUseCase{
         map.put("data", response);
         return map;
     }
-    
 }

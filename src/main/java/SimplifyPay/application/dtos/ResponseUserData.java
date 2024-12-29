@@ -12,5 +12,4 @@ public class ResponseUserData {
 
     @JsonProperty(value = "data")
     CreateUserResponse createUserResponse;
-
 }
