@@ -13,7 +13,7 @@ import SimplifyPay.infrastructure.clients.AuthorizationClient;
 import SimplifyPay.infrastructure.repositories.TransactionRepository;
 import SimplifyPay.infrastructure.repositories.WalletRepository;
 import SimplifyPay.application.dtos.TransferMoneyRequest;
-import SimplifyPay.application.validations.Validations;
+import SimplifyPay.application.utils.Validations;
 import SimplifyPay.domain.entities.TransactionEntity;
 import SimplifyPay.domain.entities.WalletEntity;
 import SimplifyPay.domain.usecases.TransferMoneyUseCase;

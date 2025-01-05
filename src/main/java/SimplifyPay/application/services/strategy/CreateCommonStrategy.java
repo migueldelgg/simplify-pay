@@ -1,46 +1,19 @@
 package SimplifyPay.application.services.strategy;
 
 import SimplifyPay.application.dtos.CreateUserRequest;
-import SimplifyPay.domain.entities.UserEntity;
-import SimplifyPay.domain.entities.WalletEntity;
+import SimplifyPay.application.utils.UserAndWalletInitializer;
 import SimplifyPay.domain.entities.WalletType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor(onConstructor= @__(@Autowired))
 public class CreateCommonStrategy implements CreateUserStrategy {
-
     @Override
     public Map<String, Object> execute(CreateUserRequest request) {
-
-        var user = UserEntity.builder()
-                .name(request.getName())
-                .document(request.getDocument())
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .build();
-
-        var wallet = WalletEntity.builder()
-                .id(UUID.randomUUID())
-                .user(user)
-                .type(WalletType.COMMON)
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
-        user.setWallet(wallet);
-        wallet.setUser(user);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("user", user);
-        map.put("wallet", wallet);
-        return map;
+        return UserAndWalletInitializer.execute(request, WalletType.COMMON);
     }
-
 }

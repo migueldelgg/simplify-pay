@@ -1,9 +1,12 @@
 package SimplifyPay.exception;
 
 import SimplifyPay.application.services.implementations.TransferMoneyImpl;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.slf4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,7 +31,7 @@ public class RestExceptionHandler {
     ) {
         var code = HttpStatus.INTERNAL_SERVER_ERROR;
         var response = RestErrorMessage.builder()
-                .statusCode(code.getReasonPhrase())
+                .statusPhrase(code.getReasonPhrase())
                 .message(ex.getMessage())
                 .build();
         return ResponseEntity.status(code).body(response);
@@ -42,7 +45,7 @@ public class RestExceptionHandler {
             var customMessage = "Pagamento não autorizado.";
             var code = HttpStatus.FORBIDDEN;
             var response = RestErrorMessage.builder()
-                .statusCode(code.getReasonPhrase())
+                .statusPhrase(code.getReasonPhrase())
                 .message(customMessage)
                 .build();
             return ResponseEntity.status(code).body(response);
@@ -54,7 +57,7 @@ public class RestExceptionHandler {
         ) {
             var code = HttpStatus.BAD_REQUEST;
             var response = RestErrorMessage.builder()
-                .statusCode(code.getReasonPhrase())
+                .statusPhrase(code.getReasonPhrase())
                 .message(ex.getMessage())
                 .build();
             return ResponseEntity.status(code).body(response);
@@ -66,7 +69,7 @@ public class RestExceptionHandler {
         ) {
             var code = HttpStatus.BAD_REQUEST;
             var response = RestErrorMessage.builder()
-                .statusCode(code.getReasonPhrase())
+                .statusPhrase(code.getReasonPhrase())
                 .message(ex.getMessage())
                 .build();
             return ResponseEntity.status(code).body(response);
@@ -78,7 +81,7 @@ public class RestExceptionHandler {
         ) {
             var code = HttpStatus.BAD_REQUEST;
             var response = RestErrorMessage.builder()
-                .statusCode(code.getReasonPhrase())
+                .statusPhrase(code.getReasonPhrase())
                 .message(ex.getMessage())
                 .build();
             return ResponseEntity.status(code).body(response);
@@ -90,7 +93,7 @@ public class RestExceptionHandler {
         ) {
             var code = HttpStatus.BAD_REQUEST;
             var response = RestErrorMessage.builder()
-                .statusCode(code.getReasonPhrase())
+                .statusPhrase(code.getReasonPhrase())
                 .message(ex.getMessage())
                 .build();
             return ResponseEntity.status(code).body(response);
@@ -102,7 +105,7 @@ public class RestExceptionHandler {
         ) {
             var code = HttpStatus.BAD_REQUEST;
             var response = RestErrorMessage.builder()
-                .statusCode(code.getReasonPhrase())
+                .statusPhrase(code.getReasonPhrase())
                 .message(ex.getMessage())
                 .build();
             return ResponseEntity.status(code).body(response);
@@ -114,7 +117,7 @@ public class RestExceptionHandler {
         ) {
             var code = HttpStatus.SERVICE_UNAVAILABLE;
             var response = RestErrorMessage.builder()
-                .statusCode(code.getReasonPhrase())
+                .statusPhrase(code.getReasonPhrase())
                 .message(ex.getMessage())
                 .build();
             return ResponseEntity.status(code).body(response);
@@ -136,10 +139,26 @@ public class RestExceptionHandler {
                 .toList();
 
         var response = RestErrorMessage.builder()
-                .statusCode(code.getReasonPhrase())
+                .statusPhrase(code.getReasonPhrase())
                 .message("Validation error: \n"+ fieldErrors)
                 .build();
 
         return ResponseEntity.status(code).body(response);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<RestErrorMessage> handleSqlExceptionHelper(
+            DataIntegrityViolationException ex
+    ) {
+
+        String message = ex.getMessage().split("\n")[0];
+
+        var code = HttpStatus.CONFLICT;
+        var response = RestErrorMessage.builder()
+                .statusPhrase(code.getReasonPhrase())
+                .message(message)
+                .build();
+        return ResponseEntity.status(code).body(response);
+    }
 }
+

@@ -44,10 +44,10 @@ public class CreateUserImpl implements CreateUserUseCase{
         logger.info("Document from Request: {}", document);
         logger.info("Document lenght: {}", documentLength);
 
-        var result = mapStrategy.get(documentLength).execute(request);
+        var resultMap = mapStrategy.get(documentLength).execute(request);
 
-        UserEntity user = (UserEntity) result.get("user");
-        WalletEntity wallet = (WalletEntity) result.get("wallet");
+        UserEntity user = (UserEntity) resultMap.get("user");
+        WalletEntity wallet = (WalletEntity) resultMap.get("wallet");
 
         userRepository.save(user);
         walletRepository.save(wallet);
