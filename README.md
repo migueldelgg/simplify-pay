@@ -1,4 +1,4 @@
-# SimplifyPay: PicPay Simplificado  
+# SimplifyPay:   
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)  
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)  
@@ -6,7 +6,7 @@
 ---
 
 ## Descrição  
-**SimplifyPay** é uma API desenvolvida como solução para o **Desafio Técnico da PicPay**.  
+**SimplifyPay** é uma API desenvolvida como solução para um **Desafio Técnico**.  
 O objetivo é implementar funcionalidades essenciais de um sistema de pagamentos entre usuários, com foco em desempenho, escalabilidade e boas práticas de desenvolvimento.  
 
 Atualmente, a API conta com os seguintes recursos:  
