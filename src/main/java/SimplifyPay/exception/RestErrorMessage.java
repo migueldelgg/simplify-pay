@@ -6,6 +6,6 @@ import lombok.Builder;
 
 @Builder
 public record RestErrorMessage (
-    @JsonProperty("status_code") String statusCode, // Exibido como "status_code" no JSON
-    String message
+        @JsonProperty("status_phrase") String statusPhrase,
+        String message
 ) {}

@@ -1,9 +1,8 @@
-package SimplifyPay.application.validations;
+package SimplifyPay.application.utils;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import SimplifyPay.application.services.implementations.TransferMoneyImpl;
 import SimplifyPay.domain.entities.WalletEntity;
 import SimplifyPay.domain.entities.WalletType;
 import SimplifyPay.exception.customExceptions.InsufficientBalanceException;
