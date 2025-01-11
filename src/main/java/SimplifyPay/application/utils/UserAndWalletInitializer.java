@@ -24,7 +24,7 @@ public class UserAndWalletInitializer {
                 .id(UUID.randomUUID())
                 .user(user)
                 .type(type)
-                .balance(BigDecimal.valueOf(0.00))
+                .balance(BigDecimal.valueOf(100.00))
                 .build();
 
         user.setWallet(wallet);
