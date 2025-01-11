@@ -1,5 +1,6 @@
 package SimplifyPay.infrastructure.controllers;
 
+import SimplifyPay.domain.entities.WalletEntity;
 import SimplifyPay.infrastructure.AcidTestScenario;
 import SimplifyPay.infrastructure.TestConfig;
 import SimplifyPay.infrastructure.TransferMoneyTestScenario;
@@ -15,12 +16,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static SimplifyPay.infrastructure.controllers.MockingAuth.stubAuthorizationSuccess;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @ActiveProfiles("test")
 @EnableWireMock({@ConfigureWireMock(name = "auth_mock", port = 9000)})
+@EnableAsync
 @Import(TestConfig.class)
 public class ControllerAcidTest {
 
@@ -63,6 +69,7 @@ public class ControllerAcidTest {
 
     @Test
     @DisplayName("Acid test.")
+    @Async
     void acid() throws Exception {
         // Given: IDs dos usuários
         var johnId = userTestScenario.getIdFromResponse(johnUserResponse);
@@ -128,4 +135,5 @@ public class ControllerAcidTest {
         assertThat(carlaFinalWallet.get().getBalance()).isEqualByComparingTo(AMOUNT_100);
         assertThat(mariaFinalWallet.get().getBalance()).isEqualByComparingTo(AMOUNT_200);
     }
+
 }
