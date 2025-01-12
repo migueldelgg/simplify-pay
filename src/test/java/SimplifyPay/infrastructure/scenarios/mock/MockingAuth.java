@@ -1,5 +1,6 @@
 package SimplifyPay.infrastructure.scenarios.mock;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
 
@@ -8,6 +9,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 
 @EnableWireMock({@ConfigureWireMock(name = "auth_mock", port = 9000)})
 public class MockingAuth {
+
+    @Value("${wiremock.server.baseUrl}")
+    private String wireMockUrl;
 
     public static void stubAuthorizationSuccess() throws Exception {
         System.out.println("Stubbing /authorize for success");

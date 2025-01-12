@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
-@EnableWireMock({@ConfigureWireMock(name = "auth_mock", port = 9000)})
+@EnableWireMock({@ConfigureWireMock(name = "auth_mock", port = 9001)})
 @Import(TestConfig.class)
 class ControllerTest {
     private final Logger logger = org.slf4j.LoggerFactory.getLogger(ControllerTest.class);
@@ -54,6 +54,7 @@ class ControllerTest {
         commonUserResponse = userTestScenario.createCommonUser();
         merchantUserResponse = userTestScenario.createMerchantUser();
     }
+
 
     @Test
     @DisplayName("Merchant cant do it transfer money.")
@@ -165,6 +166,13 @@ class ControllerTest {
         var commonWalletAfter = userTestScenario.getWallet(commonUserId);
         var merchantWalletAfter = userTestScenario.getWallet(merchantUserId);
 
+        System.out.println("----------------------");
+        System.out.println("Wallet do usuario comum: "+ commonWalletAfter.get().getBalance());
+        System.out.println("----------------------");
+        System.out.println("Wallet do usuario merchant: "+ merchantWalletAfter.get().getBalance());
+        System.out.println("----------------------");
+        System.out.println("----------------------");
+
         assertThat(commonWalletAfter.get().getBalance()).isEqualByComparingTo(AMOUNT_1000.subtract(AMOUNT_100));
         assertThat(merchantWalletAfter.get().getBalance()).isEqualByComparingTo(AMOUNT_1000.add(AMOUNT_100));
 
@@ -241,6 +249,7 @@ class ControllerTest {
         );
 
         assertThat(response.getStatus()).isEqualTo(200);
+
         assertThat(response.getContentAsString()).isEqualTo(expectedResponse);
     }
 
