@@ -1,4 +1,4 @@
-package SimplifyPay.infrastructure;
+package SimplifyPay.infrastructure.scenarios;
 
 import SimplifyPay.application.dtos.TransferMoneyRequest;
 import SimplifyPay.application.dtos.TransferMoneyResponse;
@@ -25,19 +25,17 @@ public class TransferMoneyTestScenario {
     private JacksonTester<TransferMoneyRequest> transferMoneyJson;
 
     public MockHttpServletResponse executeTransferMoneyRequest(
-            BigDecimal value, Integer payerId, Integer payeeId) throws Exception
-        {
+            BigDecimal value, Integer payerId, Integer payeeId) throws Exception {
         var request = new TransferMoneyRequest(value, payerId, payeeId);
         return mvc.perform(post("/v1/transfer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(transferMoneyJson.write(request).getJson()))
-                        .andReturn()
-                        .getResponse();
+                .andReturn()
+                .getResponse();
     }
 
     public String expectedErrorResponse(
-            String reasonPhrase, String expectedMessage) throws JsonProcessingException
-    {
+            String reasonPhrase, String expectedMessage) throws JsonProcessingException {
         var errorMessage = new RestErrorMessage(
                 reasonPhrase,
                 expectedMessage
@@ -48,8 +46,7 @@ public class TransferMoneyTestScenario {
     }
 
     public String expectedSuccessResponse(
-            UUID payer, UUID payee, BigDecimal value) throws JsonProcessingException
-    {
+            UUID payer, UUID payee, BigDecimal value) throws JsonProcessingException {
         var response = new TransferMoneyResponse(
                 payer,
                 payee,

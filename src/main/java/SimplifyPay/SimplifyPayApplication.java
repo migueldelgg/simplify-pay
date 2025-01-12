@@ -11,5 +11,4 @@ public class SimplifyPayApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SimplifyPayApplication.class, args);
 	}
-
 }

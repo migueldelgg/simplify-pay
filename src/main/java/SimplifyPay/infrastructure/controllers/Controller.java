@@ -4,13 +4,11 @@ import java.util.Map;
 
 import SimplifyPay.application.dtos.TransferMoneyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import SimplifyPay.application.dtos.CreateUserRequest;
 import SimplifyPay.application.dtos.TransferMoneyRequest;
@@ -28,16 +26,16 @@ public class Controller {
 
     private final CreateUserImpl createUserImpl;
     private final TransferMoneyImpl transferMoney;
-    
+
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/user")
-    public ResponseEntity<Map<String, Object>> createUserAndWallet(@RequestBody @Valid CreateUserRequest input) {
-        var response = createUserImpl.execute(input);
-        return ResponseEntity.ok().body(response);
+    public Map<String, Object> createUserAndWallet(@RequestBody @Valid CreateUserRequest input) {
+        return createUserImpl.execute(input);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/transfer")
-    public ResponseEntity<TransferMoneyResponse> transferMoney(@RequestBody TransferMoneyRequest req) {
-        var response = transferMoney.execute(req);
-        return ResponseEntity.ok().body(response);
+    public TransferMoneyResponse transferMoney(@RequestBody TransferMoneyRequest req) {
+        return transferMoney.execute(req);
     }
 }

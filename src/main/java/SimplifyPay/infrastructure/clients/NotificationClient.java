@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @FeignClient(
-    value = "notification-dev-tools", 
-    url="https://util.devi.tools/api/v1"
+   value = "notification-dev-tools",
+   url="${notification-client.base-url}"
 )
 public interface NotificationClient {
     

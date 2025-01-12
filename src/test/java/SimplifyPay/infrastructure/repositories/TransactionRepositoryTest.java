@@ -16,5 +16,4 @@ public interface TransactionRepositoryTest extends JpaRepository<TransactionEnti
     @Modifying
     @Query(value = "DELETE FROM \"transaction\" WHERE payer_wallet_id = :inputId", nativeQuery = true)
     void deleteByPayerWalletId(@Param("inputId") UUID inputId);
-
 }

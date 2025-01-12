@@ -1,4 +1,4 @@
-package SimplifyPay.infrastructure;
+package SimplifyPay.infrastructure.scenarios;
 
 import SimplifyPay.infrastructure.repositories.TransactionRepositoryTest;
 import SimplifyPay.infrastructure.repositories.UserRepositoryTest;
