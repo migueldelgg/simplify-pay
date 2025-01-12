@@ -1,11 +1,8 @@
 package SimplifyPay.infrastructure.controllers;
 
-import SimplifyPay.domain.entities.WalletEntity;
-import SimplifyPay.infrastructure.AcidTestScenario;
-import SimplifyPay.infrastructure.TestConfig;
-import SimplifyPay.infrastructure.TransferMoneyTestScenario;
-import SimplifyPay.infrastructure.UserTestScenario;
-import SimplifyPay.infrastructure.clients.AuthorizationClient;
+import SimplifyPay.infrastructure.scenarios.AcidTestScenario;
+import SimplifyPay.infrastructure.config.TestConfig;
+import SimplifyPay.infrastructure.scenarios.UserTestScenario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,10 +21,8 @@ import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
 
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
-import static SimplifyPay.infrastructure.controllers.MockingAuth.stubAuthorizationSuccess;
+import static SimplifyPay.infrastructure.scenarios.mock.MockingAuth.stubAuthorizationSuccess;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -39,10 +34,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @EnableAsync
 @Import(TestConfig.class)
 public class ControllerAcidTest {
-
     private final Logger logger = org.slf4j.LoggerFactory.getLogger(ControllerAcidTest.class);
 
-    // Constantes para teste
     final BigDecimal AMOUNT_0 = new BigDecimal("0.00");
     final BigDecimal AMOUNT_50 = new BigDecimal("50.00");
     final BigDecimal AMOUNT_100 = new BigDecimal("100.00");

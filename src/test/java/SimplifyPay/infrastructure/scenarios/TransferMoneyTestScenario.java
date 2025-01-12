@@ -1,4 +1,4 @@
-package SimplifyPay.infrastructure;
+package SimplifyPay.infrastructure.scenarios;
 
 import SimplifyPay.application.dtos.TransferMoneyRequest;
 import SimplifyPay.application.dtos.TransferMoneyResponse;
