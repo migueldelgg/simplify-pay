@@ -35,7 +35,8 @@ public class TransferMoneyImpl implements TransferMoneyUseCase {
     @Transactional
     public TransferMoneyResponse execute(TransferMoneyRequest req) {
         logger.info(req.toString());
-        Validations.isPayerEqualToReceiver(req.payerId(), req.payeeId()); 
+        Validations.isPayerEqualToReceiver(req.payerId(), req.payeeId());
+        Validations.isValueNegative(req.value());
         logger.info("Request validated.");
 
         logger.info("Searching the database...");

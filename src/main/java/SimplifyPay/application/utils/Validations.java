@@ -10,6 +10,8 @@ import SimplifyPay.exception.customExceptions.MerchantCannotTransferException;
 import SimplifyPay.exception.customExceptions.PayeeNotFound;
 import SimplifyPay.exception.customExceptions.PayerEqualsToPayeeException;
 import SimplifyPay.exception.customExceptions.PayerNotFound;
+import SimplifyPay.exception.customExceptions.ValueNotValidException;
+
 import org.slf4j.Logger;
 
 public class Validations {
@@ -70,6 +72,13 @@ public class Validations {
         if (balance.compareTo( BigDecimal.ZERO ) <= 0 || balance.compareTo( transferValue ) < 0) {
             logger.info("Saldo suficiente, essa validação terminou.");
             throw new InsufficientBalanceException( message );
+        }
+    }
+
+    public static void isValueNegative(BigDecimal transferValue) {
+        logger.info("Verificando se o valor da requisição é válido.");
+        if (transferValue == null || transferValue.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ValueNotValidException();
         }
     }
 }

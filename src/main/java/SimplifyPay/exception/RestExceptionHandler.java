@@ -13,6 +13,7 @@ import SimplifyPay.exception.customExceptions.MerchantCannotTransferException;
 import SimplifyPay.exception.customExceptions.PayeeNotFound;
 import SimplifyPay.exception.customExceptions.PayerEqualsToPayeeException;
 import SimplifyPay.exception.customExceptions.PayerNotFound;
+import SimplifyPay.exception.customExceptions.ValueNotValidException;
 import feign.FeignException;
 
 import java.util.Map;
@@ -154,6 +155,18 @@ public class RestExceptionHandler {
         var response = RestErrorMessage.builder()
                 .statusPhrase(code.getReasonPhrase())
                 .message(message)
+                .build();
+        return ResponseEntity.status(code).body(response);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<RestErrorMessage> handleValueIsNotValidException(
+        ValueNotValidException ex
+    ) {
+        var code = HttpStatus.BAD_REQUEST;
+        var response = RestErrorMessage.builder()
+                .statusPhrase(code.getReasonPhrase())
+                .message("Valor inserido para transferência é inválido.")
                 .build();
         return ResponseEntity.status(code).body(response);
     }
