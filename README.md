@@ -42,7 +42,7 @@ O projeto implementa dois endpoints, com validações completas para criação d
 - **email**: obrigatório e único (não pode já existir no sistema).
 - **password**: obrigatório.
 
-> **Nota**: No ambiente de desenvolvimento, as senhas não estão sendo criptografadas.
+> **Nota**: No ambiente de desenvolvimento, as senhas não estão sendo criptografadas. Caso queira adicionar criptografia, esse [repositório](https://github.com/migueldelgg/chargeback_manager) pode ajudar: 
 
 ---
 
